@@ -60,6 +60,7 @@
                         text: cm.getTextArea().value
                     },
                     success: function (data) {
+                        $("section code").html("");
                         if (data.error) {
                             var tr = $("<tr></tr>");
                             $("<td class='num'>" + data.error.line + "</td>").appendTo(tr);
