@@ -11,17 +11,36 @@
   |
  */
 
-use App\Http\Controllers\PointController;
-use App\Http\Controllers\MatrizController;
+use App\Http\Controllers\MachineController;
+use App\Exceptions\CoherenceException;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::post('/run', function (Request $request) {
-    $contr = new MatrizController();
-    $contr->create(10, 10);
-    return "ok";
+    $text = str_replace(chr(13), "", $request->input("text"));
+    $status = 200;
+    try {
+        $contr = new MachineController();
+        $contr->run_machine($text);
+        $content = json_encode([
+            'error' => false,
+            'result' => $contr->getOutput()
+        ]);
+    } catch (CoherenceException $ex) {
+        $content = json_encode([
+            'error' => [
+                'message' => $ex->getMessage(),
+                'code' => $ex->getCode(),
+                'line' => ($ex->getLine() + 1)
+            ],
+            'result' => false
+        ]);
+    }
+    return (new Response($content, $status))->header('Content-Type', 'application/json');
 });
 /*
   |--------------------------------------------------------------------------

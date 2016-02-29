@@ -14,9 +14,11 @@ namespace App\Exceptions;
  * @author Luis Miguel Morales Pajaro
  */
 class CoherenceException extends \Exception {
-
-    public function __construct($message = "", $code = 0, \Exception $previous = null) {
-        parent::__construct($message, $code, $previous);
+    
+    
+    public function __construct($message = "", $code = 0, $line = 0) {
+        parent::__construct($message, $code);
+        $this->line = $line;
     }
 
     public function __toString() {
