@@ -124,7 +124,11 @@ class MachineController extends Controller {
                 $matriz = $this->matrzc->create($N, $N, $N);
                 for ($i = 0; $i < (int) $M; $i++) {
                     $line_num++;
-                    $this->run_query_or_update($line_num, $lines[$line_num], $matriz->id, $N);
+                    if (count($lines) > $line_num){
+                        $this->run_query_or_update($line_num, $lines[$line_num], $matriz->id, $N);
+                    }else{
+                        throw new CoherenceException("Error en la linea " . ($line_num + 1) . ": se esperaba una linea más", self::FEW_DATA, $line_num);
+                    }
                 }
             }
         } else {
